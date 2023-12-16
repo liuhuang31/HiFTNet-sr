@@ -1,0 +1,7 @@
+torch==1.13.1
+numpy==1.23.5
+matplotlib
+tensorboard
+librosa==0.8.0
+tensorboard
+soundfile
