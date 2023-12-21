@@ -21,7 +21,7 @@
     "segment_size": 48000,
     "num_mels": 80,
     "n_fft": 2048,
-    "hop_size": 512,
+    "hop_size": 480,
     "win_size": 2048,
 
     "sampling_rate": 48000,

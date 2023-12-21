@@ -30,6 +30,8 @@ def load_checkpoint(filepath, device):
 def get_mel(x):
     return mel_spectrogram(x, h.n_fft, h.num_mels, h.sampling_rate, h.hop_size, h.win_size, h.fmin, h.fmax)
 
+def get_mel_24k(x):
+    return mel_spectrogram(x, 1024, h.num_mels, 24000, 240, 1024, h.fmin, 8000)
 
 def scan_checkpoint(cp_dir, prefix):
     pattern = os.path.join(cp_dir, prefix + '*')
@@ -42,7 +44,7 @@ F0_model = JDCNet(num_class=1, seq_len=192)
 
 output_dir = "gen_from_wav"
 os.makedirs(output_dir, exist_ok=True)
-cp_path = "exp/ms/v1_16k_to_48k/checkpoint"
+cp_path = "exp/v1_16k_to_48k/"
 if not os.path.exists(cp_path):
     raise ValueError(f"cp_path not exists: {cp_path}")
 
@@ -71,16 +73,15 @@ generator.remove_weight_norm()
 _ = generator.eval()
 
 # pick a file to resynthesize
-path = os.path.join("LJSpeech-1.1/wavs", "LJ049-0163.wav")
+path = os.path.join("LJSpeech-BZNSYP-16k", "BZNSYP-000001.wav")
 
-wav, sr = load_wav(path)
+wav, sr = load_wav(path, sr=24000)
 # wav = wav / MAX_WAV_VALUE
 wav = torch.FloatTensor(wav).to(device)
-x = get_mel(wav.unsqueeze(0))
-print(f"x: {x.shape}")  # x: torch.Size([1, 128, 299])
+x = get_mel_24k(wav.unsqueeze(0))
+
 with torch.no_grad():
     spec, phase = generator(x)
-    print(f"spec, phase: {spec.shape} {phase.shape}")
     y_g_hat = stft.inverse(spec, phase)
     audio = y_g_hat.squeeze()
     audio = audio * MAX_WAV_VALUE
@@ -88,3 +89,11 @@ with torch.no_grad():
 
 output_file = os.path.join(output_dir, os.path.basename(path))
 sf.write(output_file,audio,h.sampling_rate,"PCM_16")
+
+# import IPython.display as ipd
+
+# print('Synthesized:')
+# display(ipd.Audio(audio, rate=24000))
+
+# print('Original:')
+# display(ipd.Audio(wav.cpu(), rate=24000))

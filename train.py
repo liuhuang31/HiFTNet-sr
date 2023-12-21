@@ -136,7 +136,6 @@ def train(rank, a, h):
             optim_d.zero_grad()
 
             # MPD
-            print(f"y y_g_hat y_mel: {y.shape} {y_g_hat.shape} {y_mel.shape}")
             y_df_hat_r, y_df_hat_g, _, _ = mpd(y, y_g_hat.detach())
             loss_disc_f, losses_disc_f_r, losses_disc_f_g = discriminator_loss(y_df_hat_r, y_df_hat_g)
             loss_disc_f += discriminator_TPRLS_loss(y_df_hat_r, y_df_hat_g)
