@@ -15,6 +15,20 @@ To train 24k_to_48k, replace `config_v1_16k_to_48k.json` with `config_v1_24k_to_
 Checkpoints and copy of the configuration file are saved in `checkpoint_path` directory by default.<br>
 You can change the path by adding `--checkpoint_path` option.
 
+## SR model sample theory
+The hifigan means hiftnet here.
+![sr](images/sr.png)
+
+## SR results
+Dir of ```gen_from_wav``` is the generated wavs, which sound good, and better than [hifigan-sr](git@github.com:liuhuang31/hifigan-sr.git).
+- origin 16k mel-spectrum
+![BZNSYP-000001](images/BZNSYP-000001.png)
+- generated 48k mel-spectrum
+![BZNSYP-000001_generated](images/BZNSYP-000001_generated.png)
+
+## Pretrained Model
+1. The pretrained models provided is in "exp/v1_16k_to_48k/g_bst", trained with StarRail_Datasets and VCTK.
+2. For i don't have GPU resources, a kind person(@Lucy) train config_v1_16k_to_48k version and trained stop at 300k, maybe training to 800k is better.
 
 ## Inference from wav file
 1. Make `test_files` directory and copy wav files into the directory.
