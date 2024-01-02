@@ -7,7 +7,7 @@
 
 ## Training
 ```
-CUDA_VISIBLE_DEVICES="3" python train.py \
+python train.py \
 --config config_v1_16k_to_48k.json \
 --input_wavs_dir VCTK-Corpus/wav48/,genshin --checkpoint_path exp/v1_16k_to_48k/
 ```
